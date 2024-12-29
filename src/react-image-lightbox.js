@@ -209,7 +209,7 @@ class ReactImageLightbox extends Component {
       pointerup: this.handlePointerEvent,
       pointercancel: this.handlePointerEvent,
     };
-    Object.keys(this.listeners).forEach(type => {
+    Object.keys(this.listeners).forEach((type) => {
       this.windowContext.addEventListener(type, this.listeners[type]);
     });
 
@@ -217,7 +217,7 @@ class ReactImageLightbox extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    this.getSrcTypes().forEach(srcType => {
+    this.getSrcTypes().forEach((srcType) => {
       if (this.props[srcType.name] !== nextProps[srcType.name]) {
         this.moveRequested = false;
       }
@@ -231,7 +231,7 @@ class ReactImageLightbox extends Component {
     let sourcesChanged = false;
     const prevSrcDict = {};
     const nextSrcDict = {};
-    this.getSrcTypes().forEach(srcType => {
+    this.getSrcTypes().forEach((srcType) => {
       if (prevProps[srcType.name] !== this.props[srcType.name]) {
         sourcesChanged = true;
 
@@ -242,7 +242,7 @@ class ReactImageLightbox extends Component {
 
     if (sourcesChanged || this.moveRequested) {
       // Reset the loaded state for images not rendered next
-      Object.keys(prevSrcDict).forEach(prevSrc => {
+      Object.keys(prevSrcDict).forEach((prevSrc) => {
         if (!(prevSrc in nextSrcDict) && prevSrc in this.imageCache) {
           this.imageCache[prevSrc].loaded = false;
         }
@@ -257,15 +257,15 @@ class ReactImageLightbox extends Component {
 
   componentWillUnmount() {
     this.didUnmount = true;
-    Object.keys(this.listeners).forEach(type => {
+    Object.keys(this.listeners).forEach((type) => {
       this.windowContext.removeEventListener(type, this.listeners[type]);
     });
-    this.timeouts.forEach(tid => clearTimeout(tid));
+    this.timeouts.forEach((tid) => clearTimeout(tid));
   }
 
   setTimeout(func, time) {
     const id = setTimeout(() => {
-      this.timeouts = this.timeouts.filter(tid => tid !== id);
+      this.timeouts = this.timeouts.filter((tid) => tid !== id);
       func();
     }, time);
     this.timeouts.push(id);
@@ -432,7 +432,7 @@ class ReactImageLightbox extends Component {
   }
 
   clearTimeout(id) {
-    this.timeouts = this.timeouts.filter(tid => tid !== id);
+    this.timeouts = this.timeouts.filter((tid) => tid !== id);
     clearTimeout(id);
   }
 
@@ -790,7 +790,7 @@ class ReactImageLightbox extends Component {
       this.shouldHandleEvent(SOURCE_TOUCH) &&
       ReactImageLightbox.isTargetMatchImage(event.target)
     ) {
-      [].forEach.call(event.changedTouches, eventTouch =>
+      [].forEach.call(event.changedTouches, (eventTouch) =>
         this.addPointer(ReactImageLightbox.parseTouchPointer(eventTouch))
       );
       this.multiPointerStart(event);
@@ -801,7 +801,7 @@ class ReactImageLightbox extends Component {
     if (this.shouldHandleEvent(SOURCE_TOUCH)) {
       this.multiPointerMove(
         event,
-        [].map.call(event.changedTouches, eventTouch =>
+        [].map.call(event.changedTouches, (eventTouch) =>
           ReactImageLightbox.parseTouchPointer(eventTouch)
         )
       );
@@ -810,7 +810,7 @@ class ReactImageLightbox extends Component {
 
   handleTouchEnd(event) {
     if (this.shouldHandleEvent(SOURCE_TOUCH)) {
-      [].map.call(event.changedTouches, touch =>
+      [].map.call(event.changedTouches, (touch) =>
         this.removePointer(ReactImageLightbox.parseTouchPointer(touch))
       );
       this.multiPointerEnd(event);
@@ -1035,7 +1035,7 @@ class ReactImageLightbox extends Component {
   }
 
   handlePinch(pointerList) {
-    this.pinchTouchList = this.pinchTouchList.map(oldPointer => {
+    this.pinchTouchList = this.pinchTouchList.map((oldPointer) => {
       for (let i = 0; i < pointerList.length; i += 1) {
         if (pointerList[i].id === oldPointer.id) {
           return pointerList[i];
@@ -1125,17 +1125,17 @@ class ReactImageLightbox extends Component {
       return;
     }
 
-    const inMemoryImage = new global.Image();
+    const inMemoryImage = document.createElement('img');
 
     if (this.props.imageCrossOrigin) {
       inMemoryImage.crossOrigin = this.props.imageCrossOrigin;
     }
 
-    inMemoryImage.onerror = errorEvent => {
+    inMemoryImage.onerror = (errorEvent) => {
       this.props.onImageLoadError(imageSrc, srcType, errorEvent);
 
       // failed to load so set the state loadErrorStatus
-      this.setState(prevState => ({
+      this.setState((prevState) => ({
         loadErrorStatus: { ...prevState.loadErrorStatus, [srcType]: true },
       }));
 
@@ -1159,7 +1159,7 @@ class ReactImageLightbox extends Component {
 
   // Load all images and their thumbnails
   loadAllImages(props = this.props) {
-    const generateLoadDoneCallback = (srcType, imageSrc) => err => {
+    const generateLoadDoneCallback = (srcType, imageSrc) => (err) => {
       // Give up showing image on error
       if (err) {
         return;
@@ -1176,12 +1176,12 @@ class ReactImageLightbox extends Component {
     };
 
     // Load the images
-    this.getSrcTypes().forEach(srcType => {
+    this.getSrcTypes().forEach((srcType) => {
       const type = srcType.name;
 
       // there is no error when we try to load it initially
       if (props[type] && this.state.loadErrorStatus[type]) {
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
           loadErrorStatus: { ...prevState.loadErrorStatus, [type]: false },
         }));
       }
@@ -1280,13 +1280,8 @@ class ReactImageLightbox extends Component {
       reactModalProps,
       loader,
     } = this.props;
-    const {
-      zoomLevel,
-      offsetX,
-      offsetY,
-      isClosing,
-      loadErrorStatus,
-    } = this.state;
+    const { zoomLevel, offsetX, offsetY, isClosing, loadErrorStatus } =
+      this.state;
 
     const boxSize = this.getLightboxRect();
     let transitionStyle = {};
@@ -1327,8 +1322,8 @@ class ReactImageLightbox extends Component {
       }
 
       // support IE 9 and 11
-      const hasTrueValue = object =>
-        Object.keys(object).some(key => object[key]);
+      const hasTrueValue = (object) =>
+        Object.keys(object).some((key) => object[key]);
 
       // when error on one of the loads then push custom error stuff
       if (bestImageInfo === null && hasTrueValue(loadErrorStatus)) {
@@ -1354,7 +1349,6 @@ class ReactImageLightbox extends Component {
             <div className="ril-loading-circle ril__loadingCircle ril__loadingContainer__icon">
               {[...new Array(12)].map((_, index) => (
                 <div
-                  // eslint-disable-next-line react/no-array-index-key
                   key={index}
                   className="ril-loading-circle-point ril__loadingCirclePoint"
                 />
@@ -1397,7 +1391,7 @@ class ReactImageLightbox extends Component {
             className={`${imageClass} ril__image`}
             onDoubleClick={this.handleImageDoubleClick}
             onWheel={this.handleImageMouseWheel}
-            onDragStart={e => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
             style={imageStyle}
             src={imageSrc}
             key={imageSrc + keyEndings[srcType]}
@@ -1461,13 +1455,11 @@ class ReactImageLightbox extends Component {
         style={modalStyle}
         contentLabel={translate('Lightbox')}
         appElement={
-          typeof global.window !== 'undefined'
-            ? global.window.document.body
-            : undefined
+          typeof window !== 'undefined' ? window.document.body : undefined
         }
         {...reactModalProps}
       >
-        <div // eslint-disable-line jsx-a11y/no-static-element-interactions
+        <div
           // Floating modal with closing animations
           className={`ril-outer ril__outer ril__outerAnimating ${
             this.props.wrapperClassName
@@ -1487,7 +1479,7 @@ class ReactImageLightbox extends Component {
           onKeyDown={this.handleKeyInput}
           onKeyUp={this.handleKeyInput}
         >
-          <div // eslint-disable-line jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events
+          <div
             // Image holder
             className="ril-inner ril__inner"
             onClick={clickOutsideToClose ? this.closeIfClickInner : undefined}
@@ -1611,10 +1603,9 @@ class ReactImageLightbox extends Component {
           </div>
 
           {this.props.imageCaption && (
-            // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div // Image caption
               onWheel={this.handleCaptionMousewheel}
-              onMouseDown={event => event.stopPropagation()}
+              onMouseDown={(event) => event.stopPropagation()}
               className="ril-caption ril__caption"
               ref={this.caption}
             >
@@ -1635,7 +1626,7 @@ ReactImageLightbox.propTypes = {
   //-----------------------------
 
   // Main display image url
-  mainSrc: PropTypes.string.isRequired, // eslint-disable-line react/no-unused-prop-types
+  mainSrc: PropTypes.string.isRequired,
 
   // Previous display image url (displayed to the left)
   // If left undefined, movePrev actions will not be performed, and the button not displayed
@@ -1650,13 +1641,13 @@ ReactImageLightbox.propTypes = {
   //-----------------------------
 
   // Thumbnail image url corresponding to props.mainSrc
-  mainSrcThumbnail: PropTypes.string, // eslint-disable-line react/no-unused-prop-types
+  mainSrcThumbnail: PropTypes.string,
 
   // Thumbnail image url corresponding to props.prevSrc
-  prevSrcThumbnail: PropTypes.string, // eslint-disable-line react/no-unused-prop-types
+  prevSrcThumbnail: PropTypes.string,
 
   // Thumbnail image url corresponding to props.nextSrc
-  nextSrcThumbnail: PropTypes.string, // eslint-disable-line react/no-unused-prop-types
+  nextSrcThumbnail: PropTypes.string,
 
   //-----------------------------
   // Event Handlers

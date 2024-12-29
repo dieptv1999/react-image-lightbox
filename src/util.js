@@ -8,7 +8,7 @@ export function translate(str, replaceStrings = null) {
 
   let translated = str;
   if (replaceStrings) {
-    Object.keys(replaceStrings).forEach(placeholder => {
+    Object.keys(replaceStrings).forEach((placeholder) => {
       translated = translated.replace(placeholder, replaceStrings[placeholder]);
     });
   }
@@ -17,18 +17,16 @@ export function translate(str, replaceStrings = null) {
 }
 
 export function getWindowWidth() {
-  return typeof global.window !== 'undefined' ? global.window.innerWidth : 0;
+  return typeof window !== 'undefined' ? window.innerWidth : 0;
 }
 
 export function getWindowHeight() {
-  return typeof global.window !== 'undefined' ? global.window.innerHeight : 0;
+  return typeof window !== 'undefined' ? window.innerHeight : 0;
 }
 
 const isCrossOriginFrame = () => {
   try {
-    return (
-      global.window.location.hostname !== global.window.parent.location.hostname
-    );
+    return window.location.hostname !== window.parent.location.hostname;
   } catch (e) {
     return true;
   }
@@ -36,9 +34,9 @@ const isCrossOriginFrame = () => {
 
 // Get the highest window context that isn't cross-origin
 // (When in an iframe)
-export function getHighestSafeWindowContext(self = global.window.self) {
+export function getHighestSafeWindowContext(self = window.self) {
   // If we reached the top level, return self
-  if (self === global.window.top) {
+  if (self === window.top) {
     return self;
   }
 
